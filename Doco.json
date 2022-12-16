@@ -1,0 +1,184 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Doco",
+    "version" : "2.0.0",
+    "description" : "Doco"
+  },
+  "host" : "wsdev.thy.com",
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/Mypass/rest/integration/transfer/operation" : {
+      "post" : {
+        "operationId" : "postTransferOperation",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "500" : {
+            "description" : "The operation was unsuccessful.",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "408" : {
+            "description" : "The operation was timeout.",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "",
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/ApiRequest"
+          },
+          "description" : "The request body for the operation",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "definitions" : {
+    "RequestHeader" : {
+      "type" : "object",
+      "properties" : {
+        "clientTransactionId" : {
+          "type" : "string"
+        },
+        "subCompanyEmployeeId" : {
+          "type" : "string"
+        },
+        "clientUsername" : {
+          "type" : "string"
+        },
+        "channel" : {
+          "type" : "string"
+        },
+        "airlineCode" : {
+          "type" : "string"
+        },
+        "serviceName" : {
+          "type" : "string"
+        },
+        "extraParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Data"
+          }
+        }
+      }
+    },
+    "PassUserList" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "subCompanyEmployeeId" : {
+            "type" : "string"
+          },
+          "personCode" : {
+            "type" : "string"
+          },
+          "firstName" : {
+            "type" : "string"
+          },
+          "lastName" : {
+            "type" : "string"
+          },
+          "salutation" : {
+            "type" : "string"
+          },
+          "nationalId" : {
+            "type" : "string"
+          },
+          "dateOfJoining" : {
+            "type" : "string"
+          },
+          "subCompanyCode" : {
+            "type" : "string"
+          },
+          "subCompany" : {
+            "type" : "string"
+          },
+          "isCedEligible" : {
+            "type" : "boolean"
+          },
+          "emailAddress" : {
+            "type" : "string"
+          },
+          "phone1" : {
+            "type" : "string"
+          },
+          "title" : {
+            "type" : "string"
+          },
+          "titleDescriptionTr" : {
+            "type" : "string"
+          },
+          "titleDescriptionEn" : {
+            "type" : "string"
+          },
+          "priorityCode" : {
+            "type" : "string"
+          },
+          "cityOfResidence" : {
+            "type" : "string"
+          },
+          "countryOfResidence" : {
+            "type" : "string"
+          },
+          "employmentStatus" : {
+            "type" : "string"
+          },
+          "dateOfBirth" : {
+            "type" : "string"
+          },
+          "isAlive" : {
+            "type" : "boolean"
+          }
+        }
+      }
+    },
+    "ApiRequest" : {
+      "type" : "object",
+      "properties" : {
+        "requestHeader" : {
+          "$ref" : "#/definitions/RequestHeader"
+        },
+        "passUserList" : {
+          "$ref" : "#/definitions/PassUserList"
+        }
+      }
+    },
+    "Data" : {
+      "type" : "object",
+      "properties" : {
+        "key" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ApiResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

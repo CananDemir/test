@@ -1,0 +1,140 @@
+CREATE COMPUTE MODULE PrepareRequest_Compute
+	CREATE FUNCTION Main() RETURNS BOOLEAN
+	BEGIN
+
+		SET OutputRoot.HTTPRequestHeader."Authorization" = 'Basic '||base64Encode(CAST('IKCTestUserTdrk:Test.user12' as BLOB CCSID 1208));		
+
+		SET OutputRoot.JSON.Data.requestHeader.clientTransactionId = UUIDASCHAR;
+		SET OutputRoot.JSON.Data.requestHeader.subCompanyEmployeeId = '14242';
+		SET OutputRoot.JSON.Data.requestHeader.clientUsername = 'TTDC';
+		SET OutputRoot.JSON.Data.requestHeader.channel = 'APP';
+		SET OutputRoot.JSON.Data.requestHeader.airlineCode = 'TK';
+		SET OutputRoot.JSON.Data.requestHeader.serviceName = 'insertPassUserList';
+
+		CREATE FIELD OutputRoot.JSON.Data.requestHeader.extraParameters IDENTITY(JSON.Array)extraParameters;
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[1].key = 'SESSION_ID';
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[1].value = 'E70FC993E4D8461D939A589F8D37AE44';
+
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[2].key = 'CONVERSATION_ID';
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[2].value = '238';
+
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[3].key = 'CLIENT_IP';
+		SET OutputRoot.JSON.Data.requestHeader.extraParameters.Item[3].value = '10.16.240.6';
+
+		CREATE FIELD OutputRoot.JSON.Data.passUserList IDENTITY(JSON.Array)passUserList;
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].subCompanyEmployeeId = '14242';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].personCode = '99'; --personel ise 99 eş ise 00
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].firstName ='BANU';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].lastName = 'KOÇ';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].salutation = 'MS'; --cinsiyet durumuna göre ERKEK ise MR, KADIN ise MS
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].nationalId = '55555555555';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].dateOfJoining = '20200101';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].subCompanyCode = 'TTDC'; --sabit
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].subCompany = 'TURKISH DOCO IKRAM HIZMETLERI AŞ'; --sabit
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].isCedEligible = true;
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].emailAddress = 'banu@mail.com';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].phone1 = '905535555553';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].title = '3333'; --titleDescriptionTrnin HS'de yer kod karşılığı
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].titleDescriptionTr ='Özlük İşleri Uzman Yardımcısı';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].titleDescriptionEn = 'Personnel Affairs Assistant Specialist';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].priorityCode = 'R4B';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].cityOfResidence = 'IST'; --çalışılan üniteye göre değişen değer. City_Code.xlsx içerisinde yer alan CITY_CODE sütunu
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].countryOfResidence = 'TR'; --sabit
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].employmentStatus = 'Active';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].dateOfBirth = '19950101';
+		-- SET OutputRoot.JSON.Data.passUserList.Item[1].isAlive = true; --yaşıyor mu bilgisi		
+
+		SET Environment.inx = 1;
+		FOR itm AS InputRoot.DFDL.PersonelData.record[] DO
+			DECLARE i INTEGER 1;
+			SET Environment.Response[inx].sicil = itm.sicil;
+			
+			SET OutputRoot.JSON.Data.passUserList.Item[i].subCompanyEmployeeId = itm.sicil;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].personCode = '99'; --personel ise 99 eş ise 00
+			SET OutputRoot.JSON.Data.passUserList.Item[i].firstName = itm.isim;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].lastName = itm.soyisim;
+			IF itm.cinsiyet = 'ERKEK' THEN
+				SET OutputRoot.JSON.Data.passUserList.Item[i].salutation = 'MR'; --cinsiyet durumuna göre ERKEK ise MR, KADIN ise MS
+			ELSE
+				SET OutputRoot.JSON.Data.passUserList.Item[i].salutation = 'MS';
+			END IF;		
+
+
+			SET OutputRoot.JSON.Data.passUserList.Item[i].nationalId = itm.TC;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].dateOfJoining = itm.iseGirisTarihi;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].subCompanyCode = 'TTDC'; --sabit
+			SET OutputRoot.JSON.Data.passUserList.Item[i].subCompany = 'TURKISH DOCO IKRAM HIZMETLERI AŞ'; --sabit
+			IF itm.ucretsizIzindeMi = 'HAYIR' THEN
+				SET OutputRoot.JSON.Data.passUserList.Item[i].isCedEligible = true; --ücretsiz izinde ya da işten ayrıldı ise false
+			ELSE
+				SET OutputRoot.JSON.Data.passUserList.Item[i].isCedEligible = false;
+			END IF;
+
+			SET OutputRoot.JSON.Data.passUserList.Item[i].emailAddress = itm.mail;
+
+			SET OutputRoot.JSON.Data.passUserList.Item[i].phone1 = itm.telefon;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].title = itm.title; --titleDescriptionTrnin HS'de yer kod karşılığı
+			SET OutputRoot.JSON.Data.passUserList.Item[i].titleDescriptionTr = itm.titleDescTR;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].titleDescriptionEn = itm.titleDescEN;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].priorityCode = itm.oncelikKodu;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].cityOfResidence = ''; --çalışılan üniteye göre değişen değer. City_Code.xlsx içerisinde yer alan CITY_CODE sütunu
+			SET OutputRoot.JSON.Data.passUserList.Item[i].countryOfResidence = 'TR'; --sabit
+			IF itm.calisiyorMu = 'EVET' THEN
+				SET OutputRoot.JSON.Data.passUserList.Item[i].employmentStatus = 'Active'; --calışan ise Active İşten çıkmış ise Passive
+			ELSE
+				SET OutputRoot.JSON.Data.passUserList.Item[i].employmentStatus = 'Passive';
+			END IF;
+
+			SET OutputRoot.JSON.Data.passUserList.Item[i].dateOfBirth = itm.dogumTarihi;
+			SET OutputRoot.JSON.Data.passUserList.Item[i].isAlive = itm.yasiyorMu; --yaşıyor mu bilgisi		
+
+
+			IF itm.medeniDurumu <> 'BEKAR' THEN --Evli ise eş bilgileri de gonderilecek
+				SET i = i+1;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].subCompanyEmployeeId = itm.sicil;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].personCode = '00'; --personel ise 99 eş ise 00
+				SET OutputRoot.JSON.Data.passUserList.Item[i].firstName = itm.esIsim;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].lastName = itm.esSoyisim;
+				IF itm.esCinsiyet = 'ERKEK' THEN
+					SET OutputRoot.JSON.Data.passUserList.Item[i].salutation = 'MR'; --cinsiyet durumuna göre ERKEK ise MR, KADIN ise MS
+				ELSE
+					SET OutputRoot.JSON.Data.passUserList.Item[i].salutation = 'MS';
+				END IF;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].nationalId = itm.esTC;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].dateOfJoining = itm.iseGirisTarihi;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].subCompanyCode = 'TTDC'; --sabit
+				SET OutputRoot.JSON.Data.passUserList.Item[i].subCompany = 'TURKISH DOCO IKRAM HIZMETLERI AŞ'; --sabit
+				IF itm.ucretsizIzindeMi = 'HAYIR' THEN
+					SET OutputRoot.JSON.Data.passUserList.Item[i].isCedEligible = true; --ücretsiz izinde ya da işten ayrıldı ise false
+				ELSE
+					SET OutputRoot.JSON.Data.passUserList.Item[i].isCedEligible = false;
+				END IF;
+
+				SET OutputRoot.JSON.Data.passUserList.Item[i].emailAddress = itm.mail;
+
+				SET OutputRoot.JSON.Data.passUserList.Item[i].phone1 = itm.telefon;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].title = ''; --titleDescriptionTrnin HS'de yer kod karşılığı
+				SET OutputRoot.JSON.Data.passUserList.Item[i].titleDescriptionTr = itm.titleDescTR;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].titleDescriptionEn = itm.titleDescEN;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].priorityCode = itm.oncelikKodu;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].cityOfResidence = ''; --çalışılan üniteye göre değişen değer. City_Code.xlsx içerisinde yer alan CITY_CODE sütunu
+				SET OutputRoot.JSON.Data.passUserList.Item[i].countryOfResidence = 'TR'; --sabit
+				IF itm.calisiyorMu = 'EVET' THEN
+					SET OutputRoot.JSON.Data.passUserList.Item[i].employmentStatus = 'Active'; --calışan ise Active İşten çıkmış ise Passive
+				ELSE
+					SET OutputRoot.JSON.Data.passUserList.Item[i].employmentStatus = 'Passive';
+				END IF;
+
+				SET OutputRoot.JSON.Data.passUserList.Item[i].dateOfBirth = itm.esDogumTarihi;
+				SET OutputRoot.JSON.Data.passUserList.Item[i].isAlive = itm.yasiyorMu; --yaşıyor mu bilgisi
+
+			END IF;
+			PROPAGATE TO TERMINAL 'out1' DELETE NONE;
+		SET Environment.inx = Environment.inx + 1;
+		END FOR;
+
+		RETURN TRUE;
+	END;
+
+
+END MODULE;

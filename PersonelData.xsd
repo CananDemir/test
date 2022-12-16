@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:csv="http://www.ibm.com/dfdl/CommaSeparatedFormat" xmlns:dfdl="http://www.ogf.org/dfdl/dfdl-1.0/" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:ibmDfdlExtn="http://www.ibm.com/dfdl/extensions" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions">
+
+
+    <xsd:import namespace="http://www.ibm.com/dfdl/CommaSeparatedFormat" schemaLocation="IBMdefined/CommaSeparatedFormat.xsd"/>
+    <xsd:annotation>
+		<xsd:appinfo source="http://www.ogf.org/dfdl/">
+			<dfdl:format documentFinalTerminatorCanBeMissing="yes" encoding="{$dfdl:encoding}" escapeSchemeRef="csv:CSVEscapeScheme" ref="csv:CommaSeparatedFormat"/>
+		</xsd:appinfo>
+	</xsd:annotation>
+
+	<xsd:element ibmSchExtn:docRoot="true" name="PersonelData">
+		<xsd:complexType>
+			<xsd:sequence dfdl:separator="">
+				<xsd:element dfdl:terminator="%CR;%LF;%WSP*;" name="header">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ibmDfdlExtn:sampleValue="head_value1" name="sicil" type="xsd:string"/>
+							<xsd:element ibmDfdlExtn:sampleValue="head_value2" name="isim" type="xsd:string"/>							
+							<xsd:element ibmDfdlExtn:sampleValue="head_value3" name="soyisim" type="xsd:string"/>							
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value4" name="cinsiyet" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value5" name="TC" type="xsd:string"/>
+                            <xsd:element name="ucretsizIzindeMi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value7" name="mail" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value8" name="telefon" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value9" name="dogumTarihi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value10" name="title" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value11" name="titleDescTR" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value12" name="titleDescEN" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value13" name="oncelikKodu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value14" name="uniteil" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value15" name="calisiyorMu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value16" name="iseGirisTarihi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value17" name="istenCikisTarihi" type="xsd:string"/>
+                            <xsd:element name="yasiyorMu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value19" name="medeniDurumu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value20" name="esIsim" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value21" name="esSoyisim" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value22" name="esCinsiyet" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value23" name="esDogumTarihi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="head_value24" name="esTC" type="xsd:string"/>
+                        </xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>			
+				<xsd:element dfdl:occursCountKind="implicit" dfdl:terminator="%CR;%LF;%WSP*;" maxOccurs="unbounded" name="record">
+					<xsd:complexType>
+						<xsd:sequence> 
+							<xsd:element ibmDfdlExtn:sampleValue="value1" minOccurs="0" name="sicil" type="xsd:string"/>
+							<xsd:element ibmDfdlExtn:sampleValue="value2" minOccurs="0" name="isim" type="xsd:string"/>
+							<xsd:element ibmDfdlExtn:sampleValue="value3" minOccurs="0" name="soyisim" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value4" minOccurs="0" name="cinsiyet" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value5" minOccurs="0" name="TC" type="xsd:string"/>
+                            <xsd:element minOccurs="0" name="ucretsizIzindeMi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value7" minOccurs="0" name="mail" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value8" minOccurs="0" name="telefon" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value9" minOccurs="0" name="dogumTarihi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value10" minOccurs="0" name="title" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value11" minOccurs="0" name="titleDescTR" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value12" minOccurs="0" name="titleDescEN" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value13" minOccurs="0" name="oncelikKodu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value14" minOccurs="0" name="uniteil" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value15" minOccurs="0" name="calisiyorMu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value16" minOccurs="0" name="iseGirisTarihi" type="xsd:string"/>
+                            <xsd:element dfdl:nilKind="literalValue" dfdl:nilValue="%SP;" dfdl:useNilForDefault="no" ibmDfdlExtn:sampleValue="value17" minOccurs="0" name="istenCikisTarihi" nillable="false" type="xsd:string"/>
+                            <xsd:element minOccurs="0" name="yasiyorMu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value19" minOccurs="0" name="medeniDurumu" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value20" minOccurs="0" name="esIsim" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value21" minOccurs="0" name="esSoyisim" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value22" minOccurs="0" name="esCinsiyet" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value23" minOccurs="0" name="esDogumTarihi" type="xsd:string"/>
+                            <xsd:element ibmDfdlExtn:sampleValue="value24" minOccurs="0" name="esTC" type="xsd:string"/>
+                        </xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>				
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+
+
+</xsd:schema>
